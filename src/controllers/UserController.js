@@ -1,4 +1,3 @@
-import { User } from '../models/index.js'
 import { UserService } from '../services/index.js'
 
 // eslint-disable-next-line import/prefer-default-export
