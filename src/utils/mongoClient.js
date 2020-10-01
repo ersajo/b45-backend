@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const reducer = (acc, connection) => acc + `${connection.name} `;
+const reducer = (acc, connection) => `${acc}${connection.name} `;
 
 export default async () => {
   try {
