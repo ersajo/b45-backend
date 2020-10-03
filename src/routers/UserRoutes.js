@@ -1,10 +1,11 @@
 import express from 'express';
+import { UserValidator } from '../validators/index.js'
 import { UserController } from '../controllers/index.js'
 
 const router = express.Router();
 
 // Create
-router.post('/user/create', UserController.create);
+router.post('/user/create', UserValidator.create, UserController.create);
 // Read
 router.get('/user/read/:id', UserController.read);
 // Update
