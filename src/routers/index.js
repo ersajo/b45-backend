@@ -1,8 +1,12 @@
-import express from 'express';
-import userRouter from './UserRoutes.js';
+import express from 'express'
+import userRouter from './UserRoutes.js'
+import authRouter from './AuthRouter.js'
+import postRouter from './PostRouter.js'
 
-const router = express.Router();
+const router = express.Router()
 
-router.use(userRouter);
+router.use(userRouter)
+router.use(authRouter)
+router.use(postRouter)
 
-export default router;
+export default router

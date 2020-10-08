@@ -14,4 +14,22 @@ export default {
         password: Joi.string().required(),
       }),
   }),
+  update: celebrate({
+    [Segments.BODY]: Joi
+      .object()
+      .keys({
+        email: Joi.string().email(),
+        first_name: Joi.string(),
+        last_name: Joi.string(),
+        password: Joi.string(),
+      }),
+  }),
+  login: celebrate({
+    [Segments.BODY]: Joi
+      .object()
+      .keys({
+        email: Joi.string().email().required(),
+        password: Joi.string().required(),
+      }),
+  }),
 }
