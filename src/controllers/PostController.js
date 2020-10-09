@@ -1,4 +1,3 @@
-import { Error } from 'mongoose'
 import { PostService, UserService } from '../services/index.js'
 
 export default {
