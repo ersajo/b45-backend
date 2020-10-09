@@ -1,3 +1,4 @@
+import { Error } from 'mongoose'
 import { PostService, UserService } from '../services/index.js'
 
 export default {
@@ -9,7 +10,7 @@ export default {
 
       const userWithPost = await PostService.addPost(user, post)
       userWithPost.password = undefined
-      res.status(200).json(userWithPost)
+      res.status(201).json(userWithPost)
     } catch (error) {
       next(error)
     }
@@ -24,11 +25,15 @@ export default {
       next(error)
     }
   },
-  delete: async (req, res, next) => {
+  deleteOne: async (req, res, next) => {
     try {
-      const { decoded } = req
-      const user = await PostService.findOneById(decoded.id)
-      res.status(200).json(user)
+      const { decoded, params } = req
+      const user = await UserService.findOneById(decoded.id)
+      // eslint-disable-next-line no-underscore-dangle
+      const postToDelete = user.post.filter((post) => post._id === params.id)
+      const deletedPost = await PostService.deleteMany(postToDelete)
+      if (!deletedPost) throw new Error('Sin publicaciones por borrar')
+      res.status(200).json(deletedPost)
     } catch (error) {
       next(error)
     }

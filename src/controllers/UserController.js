@@ -1,5 +1,4 @@
-import { UserService } from '../services/index.js'
-import PostService from '../services/PostService.js'
+import { UserService, PostService } from '../services/index.js'
 import auth from '../utils/auth.js'
 
 export default {
@@ -9,7 +8,7 @@ export default {
       if (criteria) throw new Error('Ese correo ya esta en uso')
 
       const user = await UserService.create(req.body)
-      res.status(200).send({ UserCreated: user, msg: `El usuario ${user.email} fue creado` })
+      res.status(201).send({ UserCreated: user, msg: `El usuario ${user.email} fue creado` })
     } catch (error) {
       next(error)
     }
@@ -20,7 +19,7 @@ export default {
       if (criteria) throw new Error('Ese correo ya esta en uso')
       const user = await UserService.create(req.body)
       user.password = undefined
-      res.status(200).json(user)
+      res.status(201).json(user)
     } catch (error) {
       next(error)
     }
@@ -44,6 +43,7 @@ export default {
       const criteria = await UserService.exists({ _id: id })
       if (!criteria) throw new Error('No se encontro información del usuario solicitado')
       const user = await UserService.findOneById(id)
+      if (!user) throw new Error('User not found')
       user.password = undefined
       res.status(200).send({ UserFounded: user, msg: `El usuario ${user.email} fue encontrado` })
     } catch (error) {

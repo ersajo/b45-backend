@@ -8,7 +8,7 @@ export default async () => {
       process.env.MONGO_URI,
       { useNewUrlParser: true, useUnifiedTopology: true },
     );
-    const msg = connections.reduce(reducer, 'Connected to ');
+    const msg = connections.reduce(reducer, 'Connected to: ');
     console.log(msg);
   } catch (err) {
     console.log(err);
