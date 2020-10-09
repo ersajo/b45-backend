@@ -14,7 +14,7 @@ export default {
         password: Joi.string().required(),
       }),
   }),
-  update: celebrate({
+  updateOne: celebrate({
     [Segments.BODY]: Joi
       .object()
       .keys({
@@ -31,5 +31,10 @@ export default {
         email: Joi.string().email().required(),
         password: Joi.string().required(),
       }),
+  }),
+  findOne: celebrate({
+    [Segments.PARAMS]: Joi.object().keys({
+      id: Joi.string().required(),
+    }),
   }),
 }

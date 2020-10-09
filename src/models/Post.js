@@ -3,6 +3,10 @@ import mongoose from 'mongoose'
 const { Schema, model } = mongoose
 
 const postSchema = new Schema({
+  is_active: {
+    type: Boolean,
+    default: true,
+  },
   url_photo: {
     type: String,
     required: true,

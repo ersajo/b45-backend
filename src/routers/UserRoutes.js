@@ -7,21 +7,25 @@ const router = express.Router();
 
 // Create
 router.post('/users',
+  verifyToken,
   UserValidator.create,
   UserController.create);
 
 // Read
 router.get('/users/:id',
-  UserController.read);
+  verifyToken,
+  UserValidator.findOne,
+  UserController.findOne);
 
 // Update
-router.patch('/users/:id',
+router.patch('/users',
   verifyToken,
-  UserValidator.update,
-  UserController.update);
+  UserValidator.updateOne,
+  UserController.updateOne);
 
 // Delete
-router.delete('/users/:id',
-  UserController.delete);
+router.delete('/users',
+  verifyToken,
+  UserController.deleteOne);
 
 export default router;

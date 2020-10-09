@@ -1,4 +1,5 @@
 import { UserService } from '../services/index.js'
+import PostService from '../services/PostService.js'
 import auth from '../utils/auth.js'
 
 export default {
@@ -8,7 +9,7 @@ export default {
       if (criteria) throw new Error('Ese correo ya esta en uso')
 
       const user = await UserService.create(req.body)
-      res.status(201).send({ UserCreated: user, msg: `El usuario ${user.email} fue creado` })
+      res.status(200).send({ UserCreated: user, msg: `El usuario ${user.email} fue creado` })
     } catch (error) {
       next(error)
     }
@@ -19,7 +20,7 @@ export default {
       if (criteria) throw new Error('Ese correo ya esta en uso')
       const user = await UserService.create(req.body)
       user.password = undefined
-      res.status(201).json(user)
+      res.status(200).json(user)
     } catch (error) {
       next(error)
     }
@@ -37,36 +38,38 @@ export default {
       next(error)
     }
   },
-  read: async (req, res, next) => {
+  findOne: async (req, res, next) => {
     try {
-      const criteria = await UserService.exists({ _id: req.params.id })
+      const { id } = req.params
+      const criteria = await UserService.exists({ _id: id })
       if (!criteria) throw new Error('No se encontro información del usuario solicitado')
-      const user = await UserService.read(req.params.id)
-      res.status(201).send({ UserFounded: user, msg: `El usuario ${user.email} fue encontrado` })
+      const user = await UserService.findOneById(id)
+      user.password = undefined
+      res.status(200).send({ UserFounded: user, msg: `El usuario ${user.email} fue encontrado` })
     } catch (error) {
       next(error)
     }
   },
-  update: async (req, res, next) => {
+  updateOne: async (req, res, next) => {
     try {
-      const { id } = req.params
-      const { body } = req
-      const user = await UserService.findOneById(id)
+      const { body, decoded } = req
+      const user = await UserService.findOneById(decoded.id)
       if (!user) throw new Error('User not found')
       const modifiedUser = await UserService.updateOne(user, body)
       user.password = undefined
-      res.status(201).send({ UserUpdated: modifiedUser, msg: `El usuario ${user.email} fue actualizado` })
+      res.status(200).send({ UserUpdated: modifiedUser, msg: `El usuario ${user.email} fue actualizado` })
     } catch (error) {
       next(error)
     }
   },
-  delete: async (req, res, next) => {
+  deleteOne: async (req, res, next) => {
     try {
-      const criteria = await UserService.exists({ _id: req.params.id })
+      const { decoded } = req
+      const criteria = await UserService.exists({ _id: decoded.id })
       if (!criteria) throw new Error('No se encontro información del usuario solicitado')
-      const user = await UserService.read(req.params.id)
-      await UserService.delete(req.params.id)
-      res.status(201).send({ UserDeleted: user, msg: `El usuario ${user.email} fue eliminado` })
+      const deletedUser = await UserService.deleteOneById(decoded.id)
+      const deletedPosts = await PostService.deleteMany(deletedUser.posts)
+      res.status(200).send({ UserDeleted: deletedUser, PostsDeleted: deletedPosts, msg: `El usuario ${deletedUser.email} fue eliminado` })
     } catch (error) {
       next(error)
     }
